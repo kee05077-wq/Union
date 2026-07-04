@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Uni-On | 실시간 수어 화상 회의</title>
+    <!-- 기존 CSS 및 외부 라이브러리 유지 -->
+    <link rel="stylesheet" href="./static/frontEnd/css/room.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+    <!-- 신규 디자인 스타일 (통합) -->
+    <style>
+        body { background-color: #111; color: #fff; height: 100vh; display: flex; flex-direction: column; overflow: hidden; font-family: 'Pretendard', sans-serif; }
+        .header { display: flex; justify-content: space-between; padding: 12px 24px; background: #1a1a1a; border-bottom: 1px solid #333; }
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+        .video-area { flex: 1; position: relative; background: #000; display: flex; justify-content: center; align-items: center; }
+        
+        /* 기존 ID와 맞춘 비디오 영역 */
+        #myFace { width: 100%; height: 100%; object-fit: cover; }
+        .videoBgc { width: 100%; height: 100%; position: relative; }
+        
+        /* 자막 및 사이드바 */
+        .subtitle-overlay { position: absolute; bottom: 100px; padding: 15px 30px; background: rgba(0,0,0,0.7); border-radius: 12px; font-size: 20px; color: #14b8a6; font-weight: bold; }
+        .sidebar { width: 350px; background: #fff; color: #333; display: flex; flex-direction: column; }
+        #chatBox { flex: 1; overflow-y: auto; padding: 15px; background: #f8fafc; }
+        
+        /* 컨트롤 바 */
+        .control-bar { height: 80px; background: #1a1a1a; display: flex; justify-content: center; align-items: center; gap: 20px; }
+        .control-btn { background: none; border: none; color: #a3a3a3; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+        .control-btn.active { color: #14b8a6; }
+    </style>
+</head>
+
+<body>
+    <!-- 상단 헤더 -->
+    <header class="header">
+        <div class="logo" style="color:#14b8a6; font-weight:800;">Uni-On</div>
+        <div class="meeting-title">실시간 양방향 수어 화상 번역 룸</div>
+    </header>
+
+    <main class="main-container">
+        <!-- 중앙 화상 영역 -->
+        <section class="video-area" id="call">
+            <!-- 내 영상 (기존 ID 유지) -->
+            <div class="videoBgc" id="myView">
+                <video id="myFace" autoplay playsinline muted></video>
+                <div class="subtitle-overlay" id="subtitleText">AI 수어 인식 대기 중...</div>
+            </div>
+            
+            <!-- 다른 참가자 영상이 들어올 자리 -->
+            <div id="newUserCloneDiv" hidden></div>
+        </section>
+
+        <!-- 사이드바: 기존의 rightBar와 chatBox 기능 -->
+        <aside class="sidebar" id="rightBar">
+            <div id="chatBox"></div>
+            <div id="chatInputDiv" style="padding:15px; border-top:1px solid #ddd;">
+                <form id="chatForm">
+                    <textarea name="userChat" id="userChat" style="width:100%;" placeholder="메시지 입력..."></textarea>
+                    <input type="submit" id="sendChat" value="전송">
+                </form>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 하단 컨트롤 바: 기존 버튼 기능을 아이콘으로 대체 -->
+    <footer class="control-bar">
+        <button class="control-btn" id="myAudioStat"><i class="bi bi-mic-fill"></i><span>음소거</span></button>
+        <button class="control-btn" id="myVideoStat"><i class="bi bi-camera-video-fill"></i><span>비디오</span></button>
+        <button class="control-btn active" id="RC_sign_toggle" onclick="signToggle()">✨<span>AI 수어 인식</span></button>
+        <button class="btn-leave" onclick="location.href='/'" style="background:#ef4444; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer;">나가기</button>
+    </footer>
+
+    <!-- 기존 JS 파일들 (백엔드 로직 연동) -->
+    <script src="./static/frontEnd/js/room.js"></script>
+    <script src="./static/frontEnd/js/chats.js"></script>
+    <script src="./static/frontEnd/js/tts.js"></script>
+    <script src="./static/frontEnd/js/handler.js"></script>
+</body>
+</html>
